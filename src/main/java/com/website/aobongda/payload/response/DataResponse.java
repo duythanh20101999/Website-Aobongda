@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class DataResponse<T> extends BaseResponse {
 	private T data;
-	private List<T> datas = new ArrayList<>(null);
+	private List<T> datas = new ArrayList<>();
 
 	public DataResponse(Boolean success, String message, T data) {
 		super(success, message);
