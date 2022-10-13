@@ -41,5 +41,4 @@ public abstract class BaseModel {
 	@Column(name = "modifieddate")
 	@LastModifiedDate
 	private Date modifiedDate;
-
 }
