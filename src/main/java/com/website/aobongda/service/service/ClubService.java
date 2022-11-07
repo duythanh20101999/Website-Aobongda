@@ -26,6 +26,7 @@ public class ClubService implements IClubService {
 	private final ClubRepository clubRepository;
 	private final BrandRepository brandRepository;
 	private final LeagueRepository leagueRepository;
+
 	@Override
 	public Club findByID(Long id) {
 		Optional<Club> club = clubRepository.findById(id);
@@ -39,14 +40,20 @@ public class ClubService implements IClubService {
 
 	@Override
 	public Club save(ClubDTO clubDTO) {
-		Club club = new Club();
+		boolean check = leagueRepository.existsById(clubDTO.getLeagueId())
+				&& brandRepository.existsById(clubDTO.getBrandId());
+		if (check) {
+			Club club = new Club();
 //		club.setId(clubDTO.getId());
-        club.setNameClub(clubDTO.getNameClub());
-        Brand brand = brandRepository.getReferenceById(clubDTO.getBrandId());
-        League league = leagueRepository.getReferenceById(clubDTO.getLeagueId());
-        club.setBrand(brand);
-        club.setLeague(league);
-		return clubRepository.save(club);
+			club.setNameClub(clubDTO.getNameClub());
+			League league = leagueRepository.getReferenceById(clubDTO.getLeagueId());
+			club.setLeague(league);
+			Brand brand = brandRepository.getReferenceById(clubDTO.getBrandId());
+			club.setBrand(brand);
+			return clubRepository.save(club);
+		} else {
+			throw new AppException(404, "Brand or League not exits.");
+		}
 	}
 
 	@Override

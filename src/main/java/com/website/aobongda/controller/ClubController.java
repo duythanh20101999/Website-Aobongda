@@ -45,8 +45,12 @@ public class ClubController {
 	// requied name Club
 	@PostMapping("/post/club")
 	public ResponseEntity<?> saveClub(@RequestBody ClubDTO clubDTO) {
-		Club clubSave = iClubService.save(clubDTO);
-		return ResponseEntity.ok(new ResponseDTO(true, "Success", clubSave));
+		try {
+			Club clubSave = iClubService.save(clubDTO);
+			return ResponseEntity.ok(new ResponseDTO(true, "Success", clubSave));
+		} catch (Exception e) {
+			return ResponseEntity.ok(new ResponseDTO(false, e.getMessage(), null));
+		}
 	}
 
 	// Update club
