@@ -6,7 +6,8 @@ import com.website.aobongda.dto.LeagueDTO;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter 
+@Setter
 public class ClubResponse {
 	private String name;
 	BrandDTO brand;
