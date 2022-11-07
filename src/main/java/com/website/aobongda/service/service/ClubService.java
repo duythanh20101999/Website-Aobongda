@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.website.aobongda.dto.ClubDTO;
@@ -12,6 +13,8 @@ import com.website.aobongda.exception.AppException;
 import com.website.aobongda.model.Brand;
 import com.website.aobongda.model.Club;
 import com.website.aobongda.model.League;
+import com.website.aobongda.payload.response.ClubResponse;
+import com.website.aobongda.payload.response.DataResponse;
 import com.website.aobongda.repository.BrandRepository;
 import com.website.aobongda.repository.ClubRepository;
 import com.website.aobongda.repository.LeagueRepository;
@@ -26,7 +29,11 @@ public class ClubService implements IClubService {
 	private final ClubRepository clubRepository;
 	private final BrandRepository brandRepository;
 	private final LeagueRepository leagueRepository;
+<<<<<<< HEAD
 
+=======
+	private final ModelMapper modelMapper;
+>>>>>>> branch 'main' of https://github.com/duythanh20101999/Website-Aobongda.git
 	@Override
 	public Club findByID(Long id) {
 		Optional<Club> club = clubRepository.findById(id);
@@ -40,6 +47,7 @@ public class ClubService implements IClubService {
 
 	@Override
 	public Club save(ClubDTO clubDTO) {
+<<<<<<< HEAD
 		boolean check = leagueRepository.existsById(clubDTO.getLeagueId())
 				&& brandRepository.existsById(clubDTO.getBrandId());
 		if (check) {
@@ -54,6 +62,15 @@ public class ClubService implements IClubService {
 		} else {
 			throw new AppException(404, "Brand or League not exits.");
 		}
+=======
+		Club club = new Club();
+        club.setNameClub(clubDTO.getNameClub());
+        Brand brand = brandRepository.getReferenceById(clubDTO.getBrandId());
+        League league = leagueRepository.getReferenceById(clubDTO.getLeagueId());
+        club.setBrand(brand);
+        club.setLeague(league);
+		return clubRepository.save(club);
+>>>>>>> branch 'main' of https://github.com/duythanh20101999/Website-Aobongda.git
 	}
 
 	@Override
@@ -83,6 +100,23 @@ public class ClubService implements IClubService {
 			return true;
 		} else
 			return false;
+	}
+
+	@Override
+	public DataResponse<ClubResponse> createClub(ClubDTO newClub) {
+		DataResponse<ClubResponse> response = new DataResponse<>();
+		
+        Club club = modelMapper.map(newClub, Club.class);
+        Brand brand = brandRepository.getById(newClub.getBrandId());
+        League league = leagueRepository.getById(newClub.getLeagueId());
+        club.setBrand(brand);
+        club.setLeague(league);
+        clubRepository.save(club);
+        ClubResponse clubResponse = modelMapper.map(club, ClubResponse.class);
+        response.setSuccess(true);
+        response.setMessage("Create Success");
+        response.setData(clubResponse);
+		return response;
 	}
 
 }

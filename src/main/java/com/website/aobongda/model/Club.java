@@ -38,7 +38,7 @@ public class Club {
 	private List<Product> product;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "leauge_id")
+	@JoinColumn(name = "league_id")
 	private League league;
 
 	@ManyToOne(fetch = FetchType.LAZY)

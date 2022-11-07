@@ -52,6 +52,11 @@ public class ClubController {
 			return ResponseEntity.ok(new ResponseDTO(false, e.getMessage(), null));
 		}
 	}
+	
+	@PostMapping("/create_club")
+	public ResponseEntity<?> createClub(@RequestBody ClubDTO request){
+		return ResponseEntity.ok(iClubService.createClub(request));
+	}
 
 	// Update club
 	@PutMapping("/post/club")

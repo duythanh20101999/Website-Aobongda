@@ -7,5 +7,5 @@ import com.website.aobongda.model.League;
 
 @Repository
 public interface LeagueRepository extends JpaRepository<League, Long> {
-	Boolean findByName(String name);
+
 }
