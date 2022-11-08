@@ -13,6 +13,7 @@ import com.website.aobongda.exception.AppException;
 import com.website.aobongda.model.Brand;
 import com.website.aobongda.model.Club;
 import com.website.aobongda.model.League;
+import com.website.aobongda.model.Product;
 import com.website.aobongda.payload.response.ClubResponse;
 import com.website.aobongda.payload.response.DataResponse;
 import com.website.aobongda.repository.BrandRepository;
@@ -50,14 +51,15 @@ public class ClubService implements IClubService {
 		if (check) {
 			Club club = new Club();
 //			club.setId(clubDTO.getId());
-			club.setNameClub(clubDTO.getNameClub());
+//			club.setNameClub(clubDTO.getNameClub());
+			club = modelMapper.map(clubDTO, Club.class);
 			League league = leagueRepository.getReferenceById(clubDTO.getLeagueId());
 			club.setLeague(league);
 			Brand brand = brandRepository.getReferenceById(clubDTO.getBrandId());
 			club.setBrand(brand);
 			return clubRepository.save(club);
 		} else {
-			throw new AppException(404, "Brand or League not exits.");
+			throw new AppException(404, "Brand or League not exist.");
 		}
 
 	}
@@ -67,7 +69,7 @@ public class ClubService implements IClubService {
 		Club clubUpdate = findByID(clubDTO.getId());
 
 		if (clubUpdate != null) {
-			clubUpdate.setNameClub(clubDTO.getNameClub());
+			clubUpdate.setName(clubDTO.getName());
 			return clubRepository.save(clubUpdate);
 		} else
 			throw new AppException(404, "Club ID not found");
@@ -89,8 +91,9 @@ public class ClubService implements IClubService {
 		DataResponse<ClubResponse> response = new DataResponse<>();
 
 		Club club = modelMapper.map(newClub, Club.class);
-        Brand brand = brandRepository.getById(newClub.getBrandId());
-        League league = leagueRepository.getById(newClub.getLeagueId());
+        //Brand brand = brandRepository.getById(newClub.getBrandId());
+		Brand brand = brandRepository.getReferenceById(newClub.getBrandId());
+        League league = leagueRepository.getReferenceById(newClub.getLeagueId());
 		club.setBrand(brand);
 		club.setLeague(league);
 		clubRepository.save(club);
