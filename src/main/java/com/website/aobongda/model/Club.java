@@ -14,6 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +29,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "club")
 public class Club {
 	@Id
@@ -33,15 +37,17 @@ public class Club {
 	private Long id;
 
 	@Column(nullable = false)
-	private String nameClub;
+	private String name;
 	@OneToMany(mappedBy = "club", cascade = CascadeType.REMOVE)
 	private List<Product> product;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "league_id")
 	private League league;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "brand_id", nullable = false)
+	@JoinColumn(name = "brand_id")
 	private Brand brand;
 }

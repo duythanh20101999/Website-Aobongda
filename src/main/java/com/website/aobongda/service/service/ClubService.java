@@ -13,6 +13,7 @@ import com.website.aobongda.exception.AppException;
 import com.website.aobongda.model.Brand;
 import com.website.aobongda.model.Club;
 import com.website.aobongda.model.League;
+import com.website.aobongda.model.Product;
 import com.website.aobongda.payload.response.ClubResponse;
 import com.website.aobongda.payload.response.DataResponse;
 import com.website.aobongda.repository.BrandRepository;
@@ -30,6 +31,7 @@ public class ClubService implements IClubService {
 	private final BrandRepository brandRepository;
 	private final LeagueRepository leagueRepository;
 	private final ModelMapper modelMapper;
+
 	@Override
 	public Club findByID(Long id) {
 		Optional<Club> club = clubRepository.findById(id);
@@ -43,13 +45,23 @@ public class ClubService implements IClubService {
 
 	@Override
 	public Club save(ClubDTO clubDTO) {
-		Club club = new Club();
-        club.setNameClub(clubDTO.getNameClub());
-        Brand brand = brandRepository.getReferenceById(clubDTO.getBrandId());
-        League league = leagueRepository.getReferenceById(clubDTO.getLeagueId());
-        club.setBrand(brand);
-        club.setLeague(league);
-		return clubRepository.save(club);
+
+		boolean check = leagueRepository.existsById(clubDTO.getLeagueId())
+				&& brandRepository.existsById(clubDTO.getBrandId());
+		if (check) {
+			Club club = new Club();
+//			club.setId(clubDTO.getId());
+//			club.setNameClub(clubDTO.getNameClub());
+			club = modelMapper.map(clubDTO, Club.class);
+			League league = leagueRepository.getReferenceById(clubDTO.getLeagueId());
+			club.setLeague(league);
+			Brand brand = brandRepository.getReferenceById(clubDTO.getBrandId());
+			club.setBrand(brand);
+			return clubRepository.save(club);
+		} else {
+			throw new AppException(404, "Brand or League not exist.");
+		}
+
 	}
 
 	@Override
@@ -57,7 +69,7 @@ public class ClubService implements IClubService {
 		Club clubUpdate = findByID(clubDTO.getId());
 
 		if (clubUpdate != null) {
-			clubUpdate.setNameClub(clubDTO.getNameClub());
+			clubUpdate.setName(clubDTO.getName());
 			return clubRepository.save(clubUpdate);
 		} else
 			throw new AppException(404, "Club ID not found");
@@ -67,13 +79,6 @@ public class ClubService implements IClubService {
 	public Boolean deleteClub(Long clubId) {
 
 		Club clubDelete = findByID(clubId);
-		/*
-		 * if (clubDelete != null) { Club temp = clubDelete.getParentClub(); if (temp !=
-		 * null) { clubRepository.deleteById(clubId); return true; } else { List<Club>
-		 * subcate = clubDelete.getSubcategories(); for (Club sub : subcate) {
-		 * sub.setParentClub(null); } subcate.removeAll(subcate);
-		 * clubRepo.deleteById(clubDelete.getId()); return true; }
-		 */
 		if (clubDelete != null) {
 			clubRepository.deleteById(clubId);
 			return true;
@@ -84,17 +89,18 @@ public class ClubService implements IClubService {
 	@Override
 	public DataResponse<ClubResponse> createClub(ClubDTO newClub) {
 		DataResponse<ClubResponse> response = new DataResponse<>();
-		
-        Club club = modelMapper.map(newClub, Club.class);
-        Brand brand = brandRepository.getById(newClub.getBrandId());
-        League league = leagueRepository.getById(newClub.getLeagueId());
-        club.setBrand(brand);
-        club.setLeague(league);
-        clubRepository.save(club);
-        ClubResponse clubResponse = modelMapper.map(club, ClubResponse.class);
-        response.setSuccess(true);
-        response.setMessage("Create Success");
-        response.setData(clubResponse);
+
+		Club club = modelMapper.map(newClub, Club.class);
+        //Brand brand = brandRepository.getById(newClub.getBrandId());
+		Brand brand = brandRepository.getReferenceById(newClub.getBrandId());
+        League league = leagueRepository.getReferenceById(newClub.getLeagueId());
+		club.setBrand(brand);
+		club.setLeague(league);
+		clubRepository.save(club);
+		ClubResponse clubResponse = modelMapper.map(club, ClubResponse.class);
+		response.setSuccess(true);
+		response.setMessage("Create Success");
+		response.setData(clubResponse);
 		return response;
 	}
 

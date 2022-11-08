@@ -7,6 +7,5 @@ import com.website.aobongda.model.Order;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-
 	Order[] getOrderById(Order order);
 }

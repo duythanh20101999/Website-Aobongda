@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.website.aobongda.exception.NotFoundException;
 import com.website.aobongda.model.League;
-import com.website.aobongda.repository.BrandRepository;
 import com.website.aobongda.repository.LeagueRepository;
 import com.website.aobongda.service.impl.ILeagueService;
 

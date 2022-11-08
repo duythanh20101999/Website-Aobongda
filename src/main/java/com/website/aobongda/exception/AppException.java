@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AppException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
 	private int code;
-	private String massage;
+	private String message;
 }
