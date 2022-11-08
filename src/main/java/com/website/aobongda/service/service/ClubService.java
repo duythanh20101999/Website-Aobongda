@@ -91,7 +91,6 @@ public class ClubService implements IClubService {
 		DataResponse<ClubResponse> response = new DataResponse<>();
 
 		Club club = modelMapper.map(newClub, Club.class);
-        //Brand brand = brandRepository.getById(newClub.getBrandId());
 		Brand brand = brandRepository.getReferenceById(newClub.getBrandId());
         League league = leagueRepository.getReferenceById(newClub.getLeagueId());
 		club.setBrand(brand);
