@@ -60,22 +60,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception{
 		httpSecurity.cors().and().csrf().disable()
-			.authorizeRequests().antMatchers("/api/signup", "/api/login", "/api/admin/login").permitAll()
-			.and()
-    		.authorizeRequests()
-			.antMatchers("/api/admin/**", "/test").hasRole("ADMIN")
-			.and()
-			.authorizeRequests()
-			.antMatchers("/api/user/**", "/test").hasRole("USER")
-			.and()
-			.authorizeRequests()
-			.antMatchers("/**").permitAll()
-			.anyRequest().authenticated()
-			.and().exceptionHandling()
-			.authenticationEntryPoint(jwtEntryPoint)
-			.and().exceptionHandling()
-			.accessDeniedHandler(customAccessDeniedHandler)
-			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		.authorizeRequests().antMatchers("/api/signup", "/api/login", "/api/admin/login").permitAll()
+		.and()
+		.authorizeRequests()
+		.antMatchers("/api/admin/**", "/test").hasRole("ADMIN")
+		.and()
+		.authorizeRequests()
+		.antMatchers("/api/user/**").hasRole("USER")
+		.and()
+		.authorizeRequests()
+		.antMatchers("/**").permitAll()
+		.anyRequest().authenticated()
+		.and().exceptionHandling()
+		.authenticationEntryPoint(jwtEntryPoint)
+		.and().exceptionHandling()
+		.accessDeniedHandler(customAccessDeniedHandler)
+		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		httpSecurity.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 }

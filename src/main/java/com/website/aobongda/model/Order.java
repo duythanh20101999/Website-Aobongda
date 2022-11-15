@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -23,12 +24,16 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "orders")
-public class Order extends BaseModel {
+public class Order {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
+	private String name;
+	@Column(nullable = false)
+	private String phone;
 	@Column(nullable = false)
 	private String address;
 	@Column(nullable = false)
@@ -43,21 +48,20 @@ public class Order extends BaseModel {
 	private Long totalPrice;
 	@Column(nullable = false)
 	private String status;
-	@Column(nullable = false)
-	private String voucher;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_user", nullable = true)
 	private User user;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_payment")
 	private Payment payment;
 
 	@OneToMany(mappedBy = "order",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<OrderDetail> orderDetails;
 
-	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-	private List<Voucher> vouchers;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_voucher", nullable = true)
+	private Voucher voucher;
 
 }

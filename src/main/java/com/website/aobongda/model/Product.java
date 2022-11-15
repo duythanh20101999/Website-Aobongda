@@ -43,9 +43,8 @@ public class Product {
     @OneToMany(mappedBy="product",cascade = CascadeType.REMOVE)
     private List<ProductImage> productimage;
     
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_orderDetail")
-	private OrderDetail orderDetail;
+	@OneToMany(mappedBy = "product")
+	private List<OrderDetail> orderDetails;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_club")
