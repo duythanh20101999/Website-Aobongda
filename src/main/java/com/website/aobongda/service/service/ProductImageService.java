@@ -23,9 +23,9 @@ public class ProductImageService implements IProductImageService {
 	@Override
 	public boolean saveNewImage(List<ProductImageReq> productImageReqs) {
 		List<ProductImage> productImages = new ArrayList<>();
-		productImageReqs.forEach(ProductImageReq -> {
-			Product product = productRepo.getReferenceById(ProductImageReq.getProductID());
-			productImages.add(new ProductImage(null, ProductImageReq.getUrlImage(), product));
+		productImageReqs.forEach(image -> {
+			Product product = productRepo.getReferenceById(image.getProductID());
+			productImages.add(new ProductImage(null, image.getUrlImage(), product));
 		});
 		return productImageRepo.saveAll(productImages).size() > 0;
 	}

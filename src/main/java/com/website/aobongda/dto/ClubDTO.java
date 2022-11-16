@@ -8,6 +8,4 @@ public class ClubDTO {
 	private String name;
 	private Long leagueId;
 	private Long brandId;
-	
-
 }

@@ -2,15 +2,16 @@ package com.website.aobongda.dto;
 
 import java.util.List;
 
-import lombok.Data;
+import com.website.aobongda.model.Club;
 
+import lombok.Data;
 @Data
-public class ProductReq {
+public class ProductDetailResp {
 	private Long id;
 	private String name;
 	private String description;
 	private Long price;
 	private int status;
-	private Long clubID;
-	private List<ProductImageReq> images;
+	private Club club;
+	private List<ProductImageResp> images;
 }
