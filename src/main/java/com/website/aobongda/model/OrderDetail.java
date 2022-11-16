@@ -34,7 +34,8 @@ public class OrderDetail extends BaseModel {
 	@JoinColumn(name = "id_order")
 	private Order order;
 
-	@OneToMany(mappedBy = "orderDetail", fetch = FetchType.LAZY)
-	private List<Product> product;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_product")
+	private Product product;
 
 }

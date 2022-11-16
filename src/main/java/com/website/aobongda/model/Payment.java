@@ -27,6 +27,4 @@ public class Payment {
 	@Column(nullable = false)
 	private String name;
 
-	@OneToOne(mappedBy = "payment")
-	private Order order;
 }
