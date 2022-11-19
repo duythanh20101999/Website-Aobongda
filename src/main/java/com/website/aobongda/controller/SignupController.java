@@ -54,25 +54,12 @@ public class SignupController {
 		return ResponseEntity.ok(signupService.updateResetPasswordCode(email.getText()));
 	}
 	
-	@GetMapping("/api/forgot_password")
-	public ResponseEntity<?> forgotPasswordForm(){
-		return ResponseEntity.ok(new StringRequest());
-	}
 	
 	@PostMapping("/api/reset_password")
 	public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest password, HttpServletRequest request){
 		return ResponseEntity.ok(signupService.updatePassword(request, password));
 	}
 	
-	@GetMapping("/api/reset_password")
-	public ResponseEntity<?> resetPasswordForm(){
-		return ResponseEntity.ok(new ResetPasswordRequest());
-	}
-	
-	@GetMapping("/api/user/change_password")
-	public ResponseEntity<?> changePasswordForm(){
-		return ResponseEntity.ok(new ChangePasswordRequest());
-	}
 	
 	@PostMapping("/api/user/change_password")
 	public ResponseEntity<?> changePassword(@AuthenticationPrincipal UserPrincipal user, @RequestBody @Valid ChangePasswordRequest request){
