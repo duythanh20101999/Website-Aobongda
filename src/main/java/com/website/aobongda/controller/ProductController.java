@@ -1,10 +1,13 @@
 package com.website.aobongda.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,24 +23,28 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class ProductController {
+	@Autowired
 	private final IProductService iproductService;
 
-	@PostMapping("/product")
-	private ResponseEntity<?> addProduct(@RequestBody ProductReq productReq) {
-		Product product = iproductService.saveNewProduct(productReq);
-		if (product != null) {
-			return ResponseEntity.ok(new ResponseDTO(true, "Success", product));
-		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(false, "Failed", null));
+	@PostMapping("/admin/create_product")
+	private ResponseEntity<?> create(@RequestBody ProductReq productReq) {
+		return ResponseEntity.ok(iproductService.create(productReq));
+	}
+	
+	@GetMapping("/products")
+	public ResponseEntity<?> getAllProducts(){
+		return ResponseEntity.ok(iproductService.getAllProducts());
 	}
 
-	@GetMapping("/product/{productId}")
-	private ResponseEntity<?> getProductById(@PathVariable Long productId) {
-		ProductDetailResp productResp = iproductService.findProductByID(productId);
-		if (productResp != null) {
-			return ResponseEntity.ok(new ResponseDTO(true, "Success", productResp));
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDTO(true, "Not Found Product ID", null));
+	@GetMapping("/product/{id}")
+	public ResponseEntity<?> getProductById(@PathVariable("id") Long id){
+		return ResponseEntity.ok(iproductService.getProductById(id));
+	}
+	
+	@PutMapping("/admin/update_product/{id}")
+	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody ProductReq request){
+		return ResponseEntity.ok(iproductService.update(id, request));
 	}
 }

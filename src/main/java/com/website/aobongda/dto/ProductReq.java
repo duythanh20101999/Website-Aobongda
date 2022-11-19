@@ -1,7 +1,5 @@
 package com.website.aobongda.dto;
 
-import java.util.List;
-
 import lombok.Data;
 
 @Data
@@ -11,6 +9,6 @@ public class ProductReq {
 	private String description;
 	private Long price;
 	private int status;
-	private Long clubID;
-	private List<ProductImageReq> images;
+	private Long id_club;
+	private String image;
 }

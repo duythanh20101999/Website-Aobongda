@@ -1,72 +1,95 @@
 package com.website.aobongda.service.service;
 
+import java.security.cert.CertStoreSpi;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.website.aobongda.dto.ProductDetailResp;
-import com.website.aobongda.dto.ProductImageResp;
+import com.website.aobongda.dto.ClubDTO;
 import com.website.aobongda.dto.ProductReq;
 import com.website.aobongda.model.Club;
-
 import com.website.aobongda.model.Product;
-import com.website.aobongda.model.ProductImage;
+import com.website.aobongda.payload.response.DataResponse;
+import com.website.aobongda.payload.response.ProductReponse;
 import com.website.aobongda.repository.ClubRepository;
-
 import com.website.aobongda.repository.ProductRepository;
 import com.website.aobongda.service.impl.IProductService;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
-@Transactional
 public class ProductService implements IProductService {
 
-	private final ProductRepository productRepo;
-	private final ModelMapper mapper;
-	private final ClubRepository clubRepo;
-
-	private final ProductImageService productImageService;
+	@Autowired
+	ModelMapper modelMapper;
+	@Autowired
+	ProductRepository repository;
+	@Autowired
+	ClubRepository clubRepository;
 
 	@Override
-	public Product saveNewProduct(ProductReq productReq) {
-		Product product = new Product();
-		Club club = clubRepo.getReferenceById(productReq.getClubID());
-		product = mapper.map(productReq, Product.class);
+	public DataResponse<ProductReq> create(ProductReq request) {
+		DataResponse<ProductReq> response = new DataResponse<>();
+		Club club = clubRepository.getById(request.getId_club());
+		Product product = modelMapper.map(request, Product.class);
 		product.setClub(club);
-		productRepo.save(product);
-		Product finalProduct = product;
-		if (productReq.getImages() != null) {
-
-			productReq.getImages().forEach(image -> {
-				image.setProductID(finalProduct.getId());
-			});
-			productImageService.saveNewImage(productReq.getImages());
-			
-		}
-		
-		return product;
+		repository.save(product);
+		response.setSuccess(true);
+		response.setMessage("Create successful product");
+		response.setData(request);
+		return response;
 	}
 
 	@Override
-	public ProductDetailResp findProductByID(Long productId) {
-		Optional<Product> productOp = productRepo.findById(productId);
-		Product product = productOp.orElse(null);
-		if (product == null)
-			return null;
-		List<ProductImage> productImages = product.getProductimage();
-		ProductDetailResp productResp = mapper.map(product, ProductDetailResp.class);
-		List<ProductImageResp> productImageResps = new ArrayList<>();
-		productImages.forEach(ProductImage -> {
-			ProductImageResp productImageResp = mapper.map(ProductImage, ProductImageResp.class);
-			productImageResps.add(productImageResp);
-		});
-		productResp.setImages(productImageResps);
-		return productResp;
+	public DataResponse<?> update(Long id, ProductReq request) {
+		DataResponse<?> response = new DataResponse<>();
+		Product product = repository.getById(id);
+		if (product == null) {
+			response.setSuccess(false);
+			response.setMessage("Product not found");
+			return response;
+		}
+		product = modelMapper.map(request, Product.class);
+		product.setId(id);
+		product.setClub(clubRepository.getById(request.getId_club()));
+		repository.save(product);
+		response.setSuccess(true);
+		response.setMessage("Update successful");
+		return response;
 	}
+
+	@Override
+	public DataResponse<ProductReponse> getAllProducts() {
+		DataResponse<ProductReponse> response = new DataResponse<>();
+		List<Product> products = repository.findAll();
+		List<ProductReponse> listProduct = new ArrayList<>();
+		for (Product product : products) {
+			ProductReponse productReponse = modelMapper.map(product, ProductReponse.class);
+			productReponse.setClub(modelMapper.map(product.getClub(), ClubDTO.class));
+			listProduct.add(productReponse);
+		}
+		response.setSuccess(true);
+		response.setMessage("Ok");
+		response.setDatas(listProduct);
+		return response;
+	}
+
+	@Override
+	public DataResponse<ProductReponse> getProductById(Long id) {
+		DataResponse<ProductReponse> response = new DataResponse<>();
+		Product product = repository.getById(id);
+		if (product == null) {
+			response.setSuccess(false);
+			response.setMessage("Product not found");
+			return response;
+		}
+		ProductReponse productReponse = modelMapper.map(product, ProductReponse.class);
+		productReponse.setClub(modelMapper.map(product.getClub(), ClubDTO.class));
+		response.setSuccess(true);
+		response.setMessage("Ok");
+		response.setData(productReponse);
+		return response;
+	}
+
 }

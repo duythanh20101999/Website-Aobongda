@@ -13,5 +13,5 @@ public class ProductDetailResp {
 	private Long price;
 	private int status;
 	private Club club;
-	private List<ProductImageResp> images;
+//	private List<ProductImageResp> images;
 }

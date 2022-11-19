@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class EmailRequest {
+public class StringRequest {
 	@NotBlank
-	private String email;
+	private String text;
 }

@@ -40,8 +40,7 @@ public class Product {
     @Column(nullable = false)
     private int status;
     
-    @OneToMany(mappedBy="product",cascade = CascadeType.REMOVE)
-    private List<ProductImage> productimage;
+    private String image;
     
 	@OneToMany(mappedBy = "product")
 	private List<OrderDetail> orderDetails;
