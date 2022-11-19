@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,21 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.website.aobongda.dto.UserDTO;
 import com.website.aobongda.payload.request.ChangePasswordRequest;
-import com.website.aobongda.payload.request.EmailRequest;
 import com.website.aobongda.payload.request.ResetPasswordRequest;
+import com.website.aobongda.payload.request.StringRequest;
 import com.website.aobongda.security.userprincipal.UserPrincipal;
 import com.website.aobongda.service.impl.ISignupService;
 
 
 @RestController
 @RequestMapping
+@CrossOrigin(origins = "*")
 public class SignupController {
 	@Autowired
 	ISignupService signupService;
 	
 	@PostMapping("/api/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO request, HttpServletRequest siteURL) throws UnsupportedEncodingException, MessagingException{
-		return ResponseEntity.ok(signupService.createUser(request, siteURL));
+	public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO request) throws UnsupportedEncodingException, MessagingException{
+		return ResponseEntity.ok(signupService.createUser(request));
 	}
 	
 	@PostMapping("/api/admin/signup")
@@ -42,19 +44,19 @@ public class SignupController {
 		return ResponseEntity.ok(signupService.createAdmin(request, role));
 	}
 	
-	@GetMapping("/api/verify")
-	public ResponseEntity<?> confirmedEmail(@Param("code") String code){
-		return ResponseEntity.ok(signupService.enableUser(code));
+	@PostMapping("/api/verify")
+	public ResponseEntity<?> confirmedEmail(@Valid @RequestBody StringRequest code){
+		return ResponseEntity.ok(signupService.enableUser(code.getText()));
 	}
 	
 	@PostMapping("/api/forgot_password")
-	public ResponseEntity<?> updateVerifyCode(@Valid @RequestBody EmailRequest email, HttpServletRequest siteURL) throws UnsupportedEncodingException, MessagingException{
-		return ResponseEntity.ok(signupService.updateResetPasswordCode(email.getEmail(), siteURL));
+	public ResponseEntity<?> updateVerifyCode(@Valid @RequestBody StringRequest email) throws UnsupportedEncodingException, MessagingException{
+		return ResponseEntity.ok(signupService.updateResetPasswordCode(email.getText()));
 	}
 	
 	@GetMapping("/api/forgot_password")
 	public ResponseEntity<?> forgotPasswordForm(){
-		return ResponseEntity.ok(new EmailRequest());
+		return ResponseEntity.ok(new StringRequest());
 	}
 	
 	@PostMapping("/api/reset_password")

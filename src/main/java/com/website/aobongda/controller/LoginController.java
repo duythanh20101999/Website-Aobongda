@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,17 +16,18 @@ import com.website.aobongda.utility.datatype.RolePrefix;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class LoginController {
 	@Autowired
 	LoginService loginService;
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> loginUser (@Valid @RequestBody LoginRequest request){
-		return ResponseEntity.ok(loginService.authenticateUser(request, RolePrefix.USER));
+		return ResponseEntity.ok(loginService.authenticateUser(request));
 	}
 	
 	@PostMapping("/admin/login")
 	public ResponseEntity<?> loginAdmin (@Valid @RequestBody LoginRequest request){
-		return ResponseEntity.ok(loginService.authenticateUser(request, RolePrefix.ADMIN));
+		return ResponseEntity.ok(loginService.authenticateUser(request));
 	}
 }
