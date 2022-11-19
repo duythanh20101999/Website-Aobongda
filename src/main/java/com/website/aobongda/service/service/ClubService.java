@@ -50,8 +50,6 @@ public class ClubService implements IClubService {
 				&& brandRepository.existsById(clubDTO.getBrandId());
 		if (check) {
 			Club club = new Club();
-//			club.setId(clubDTO.getId());
-//			club.setNameClub(clubDTO.getNameClub());
 			club = modelMapper.map(clubDTO, Club.class);
 			League league = leagueRepository.getReferenceById(clubDTO.getLeagueId());
 			club.setLeague(league);

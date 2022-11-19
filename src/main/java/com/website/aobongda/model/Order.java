@@ -57,7 +57,7 @@ public class Order {
 	@JoinColumn(name = "id_payment")
 	private Payment payment;
 
-	@OneToMany(mappedBy = "order",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<OrderDetail> orderDetails;
 
 	@ManyToOne(fetch = FetchType.LAZY)
