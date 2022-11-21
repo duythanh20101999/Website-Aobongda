@@ -48,6 +48,8 @@ public class Order {
 	private Long totalPrice;
 	@Column(nullable = false)
 	private String status;
+	@Column
+	private String code;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_user", nullable = true)

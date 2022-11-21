@@ -33,49 +33,6 @@ public class LeagueController {
 	@Autowired
 	private final LeagueMapper leagueMapper; 
 
-	@PostMapping
-	private ResponseEntity<?> saveLeague(@RequestBody League league) {
-		League newLeague = leagueService.saveNewLeague(league);
-		if (newLeague != null) {
-			return ResponseEntity.ok(new ResponseDTO(true, "Success", newLeague));
-		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(false, "Failed", null));
-	}
-
-	@PutMapping("/{id}")
-	public ResponseEntity<?> updateLeague(@PathVariable final Long id, @RequestBody League league) {
-		try {
-			// Update ok
-			return ResponseEntity
-					.ok(new ResponseDTO(true, "Success", leagueMapper.toLeagueDTO(leagueService.updateLeague(id, league))));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(false, "Failed", e.getMessage()));
-		}
-	}
-
-	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteLeague(@PathVariable final Long id) {
-		try {
-			// Delete ok
-			leagueService.deleteLeague(id);
-			return ResponseEntity.ok(new ResponseDTO(true, "Success", null));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(false, "Failed", e.getMessage()));
-		}
-	}
-
-	@GetMapping
-	public ResponseEntity<?> getAllShop(@RequestParam(defaultValue = "0") Integer page,
-			@RequestParam(defaultValue = "4") Integer size) {
-		try {
-			// Get all ok
-			return ResponseEntity
-					.ok(new ResponseDTO(true, "Success", leagueMapper.toLeagueDTO(leagueService.getAllLeague(page, size))));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(false, "Failed", e.getMessage()));
-		}
-	}
-	
 	@PostMapping("/admin/create_league")
 	public ResponseEntity<?> create(@RequestBody LeagueDTO request){
 		return ResponseEntity.ok(leagueService.create(request));
