@@ -23,7 +23,8 @@ public class OrderController {
 
 	@PostMapping("/order")
 	private ResponseEntity<?> create(@RequestBody OrderReq orderReq) {
-		Order order = iorderService.create(orderReq);
-		return ResponseEntity.ok(new ResponseDTO(true, "Success", order));
+		//Order order = iorderService.create(orderReq);
+		//return ResponseEntity.ok(new ResponseDTO(true, "Success", order));
+		return ResponseEntity.ok(iorderService.create(orderReq));
 	}
 }

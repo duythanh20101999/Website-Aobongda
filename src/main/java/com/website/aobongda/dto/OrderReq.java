@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class OrderReq {
 
+	private Long id;
 	private String name;
 	private String phone;
 	private String address;
@@ -15,4 +16,7 @@ public class OrderReq {
 	private Long totalPrice;
 	private String status;
 	private String code;
+	private Long id_payment;
+	private Long id_user;
+	private Long id_voucher;
 }
