@@ -8,5 +8,4 @@ public class VoucherReq {
 	private String code;
 	private Long price;
 	private int status;
-	private Long orderId;
 }
