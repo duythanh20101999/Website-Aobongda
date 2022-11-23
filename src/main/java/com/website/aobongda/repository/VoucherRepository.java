@@ -9,6 +9,9 @@ import com.website.aobongda.model.Voucher;
 
 public interface VoucherRepository extends JpaRepository<Voucher, Long>{
 	@Query("SELECT v FROM Voucher as v WHERE v.code = :code ")
-	List<Voucher> findByCode(String code);
+	Voucher findByCode(String code);
+	
+	@Query("SELECT v FROM Voucher as v WHERE v.code = :code ")
+	List<Voucher> findVouchersByCode(String code);
 	void deleteVoucherByCode(String code);
 }

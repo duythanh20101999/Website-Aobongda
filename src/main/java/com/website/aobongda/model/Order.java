@@ -15,6 +15,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -22,6 +27,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
+
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -48,16 +54,20 @@ public class Order {
 	private Long totalPrice;
 	@Column(nullable = false)
 	private String status;
+	@Column
+	private String code;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_user", nullable = true)
 	private User user;
 
+	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_payment")
+	@JsonManagedReference
 	private Payment payment;
 
-	@OneToMany(mappedBy = "order",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<OrderDetail> orderDetails;
 
 	@ManyToOne(fetch = FetchType.LAZY)
