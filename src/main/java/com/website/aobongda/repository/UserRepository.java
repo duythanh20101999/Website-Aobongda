@@ -1,6 +1,5 @@
 package com.website.aobongda.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -35,10 +34,4 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	
 	@Query(value = "select * from user where verification_code = :verify", nativeQuery = true)
 	public User findByVerifyCode(@Param("verify") String verify);
-	
-	@Query(value = "select * from user where roles = 'USER'", nativeQuery = true)
-	public List<User> getAllAccountUser();
-	
-	@Query(value = "select * from user where id = :id", nativeQuery = true)
-	public User getAccountUserById(@Param("id") Long id);
 }

@@ -1,6 +1,5 @@
 package com.website.aobongda.model;
 
-import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -33,33 +32,22 @@ public class Order {
 
 	@Column(nullable = false)
 	private String name;
-	
 	@Column(nullable = false)
 	private String phone;
-	
 	@Column(nullable = false)
 	private String address;
-	
 	@Column(nullable = false)
 	private String note;
-	
 	@Column(nullable = false)
 	private Long totalPriceOrigin;
-	
 	@Column(nullable = false)
 	private Long priceOff;
-	
 	@Column(nullable = false)
 	private Long priceShip;
-	
 	@Column(nullable = false)
 	private Long totalPrice;
-	
 	@Column(nullable = false)
-	private int status;
-	
-	@Column(name = "date")
-	private Date date;
+	private String status;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_user", nullable = true)

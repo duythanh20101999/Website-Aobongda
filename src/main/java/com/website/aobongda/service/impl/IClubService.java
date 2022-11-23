@@ -14,5 +14,4 @@ public interface IClubService {
 	Club updateClub(ClubDTO clubDTO);
 	Boolean deleteClub(Long clubId);
 	DataResponse<ClubResponse> createClub(ClubDTO newClub);
-	DataResponse<ClubResponse> getAllClubs();
 }
