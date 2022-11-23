@@ -7,6 +7,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class ProductReponse {
+	Long id;
 	String name, description, image;
 	Long price;
 	int status;

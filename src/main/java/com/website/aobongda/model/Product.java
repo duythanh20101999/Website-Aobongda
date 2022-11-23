@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,7 @@ public class Product {
     @Column(nullable = false)
     private int status;
     
+//    private MultipartFile imageFile;
     private String image;
     
 	@OneToMany(mappedBy = "product")
