@@ -67,15 +67,18 @@ public class ProductService implements IProductService {
 	public DataResponse<?> update(Long id, ProductReq request, MultipartFile image) throws IOException {
 		DataResponse<?> response = new DataResponse<>();
 		Product product = repository.getById(id);
+		
 		if (product == null) {
 			response.setSuccess(false);
 			response.setMessage("Product not found");
 			return response;
 		}
+		String imageOld = product.getImage();
 		product = modelMapper.map(request, Product.class);
 		product.setId(id);
+		product.setImage(imageOld);
 		product.setClub(clubRepository.getById(request.getId_club()));
-		if(image != null) {
+		if(image.getOriginalFilename() != "") {
 			Path staticPath = Paths.get("static");
 	        Path imagePath = Paths.get("images");
 	        if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
