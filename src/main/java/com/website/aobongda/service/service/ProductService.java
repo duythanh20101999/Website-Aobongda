@@ -55,7 +55,7 @@ public class ProductService implements IProductService {
 		Club club = clubRepository.getById(request.getId_club());
 		Product product = modelMapper.map(request, Product.class);
 		product.setClub(club);
-		product.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
+		product.setImage(image.getOriginalFilename());
 		repository.save(product);
 		response.setSuccess(true);
 		response.setMessage("Create successful product");
@@ -64,7 +64,7 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
-	public DataResponse<?> update(Long id, ProductReq request) {
+	public DataResponse<?> update(Long id, ProductReq request, MultipartFile image) throws IOException {
 		DataResponse<?> response = new DataResponse<>();
 		Product product = repository.getById(id);
 		if (product == null) {
@@ -75,6 +75,19 @@ public class ProductService implements IProductService {
 		product = modelMapper.map(request, Product.class);
 		product.setId(id);
 		product.setClub(clubRepository.getById(request.getId_club()));
+		if(image != null) {
+			Path staticPath = Paths.get("static");
+	        Path imagePath = Paths.get("images");
+	        if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
+	            Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
+	        }
+	        Path file = CURRENT_FOLDER.resolve(staticPath)
+	                .resolve(imagePath).resolve(image.getOriginalFilename());
+	        try (OutputStream os = Files.newOutputStream(file)) {
+	            os.write(image.getBytes());
+	        }
+	        product.setImage(image.getOriginalFilename());
+		}
 		repository.save(product);
 		response.setSuccess(true);
 		response.setMessage("Update successful");

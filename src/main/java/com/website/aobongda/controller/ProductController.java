@@ -52,7 +52,15 @@ public class ProductController {
 	}
 	
 	@PutMapping("/admin/update_product/{id}")
-	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody ProductReq request){
-		return ResponseEntity.ok(iproductService.update(id, request));
+	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestParam String name, @RequestParam String description,
+			@RequestParam int status, @RequestParam Long price,
+			@RequestParam Long id_club, @RequestParam MultipartFile img) throws IOException {
+		ProductReq productReq = new ProductReq();
+		productReq.setName(name);
+		productReq.setDescription(description);
+		productReq.setPrice(price);
+		productReq.setStatus(status);
+		productReq.setId_club(id_club);
+		return ResponseEntity.ok(iproductService.update(id, productReq, img));
 	}
 }

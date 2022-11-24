@@ -62,7 +62,7 @@ public class Order {
 	private Long totalPrice;
 	
 	@Column(nullable = false)
-	private String status;
+	private int status;
 	
 	@Column
 	private String code;

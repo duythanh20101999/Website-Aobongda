@@ -14,7 +14,7 @@ public class OrderReq {
 	private Long priceOff;
 	private Long priceShip;
 	private Long totalPrice;
-	private String status;
+	private int status;
 	private String code;
 	private Long id_payment;
 	private Long id_user;

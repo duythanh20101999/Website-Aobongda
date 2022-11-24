@@ -115,11 +115,7 @@ public class OrderService implements IOrderService {
 				OrderResponse orderResponse = new OrderResponse();
 				orderResponse = modelMapper.map(order, OrderResponse.class);
 				orderResponse.setUsername(order.getUser().getUsername());
-				if(order.getStatus() == "0") {
-					orderResponse.setStatus("Chưa thanh toán");
-				}else {
-					orderResponse.setStatus("Đã thanh toán");
-				}
+				orderResponse.setStatus(order.getStatus());
 				
 				List<OrderDetail> orDetails = order.getOrderDetails();
 				List<ProductReq> listProduct = new ArrayList<>();
@@ -156,11 +152,7 @@ public class OrderService implements IOrderService {
 				OrderResponse orderResponse = new OrderResponse();
 				orderResponse = modelMapper.map(order, OrderResponse.class);
 				orderResponse.setUsername(order.getUser().getUsername());
-				if(order.getStatus() == "0") {
-					orderResponse.setStatus("Chưa thanh toán");
-				}else {
-					orderResponse.setStatus("Đã thanh toán");
-				}
+				orderResponse.setStatus(order.getStatus());
 				List<OrderDetail> orDetails = order.getOrderDetails();
 				List<ProductReq> listProduct = new ArrayList<>();
 				for(OrderDetail orderDetail: orDetails) {

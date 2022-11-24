@@ -16,7 +16,7 @@ public class OrderResponse {
 	private String phone;
 	private String address;
 	private List<ProductReq> products;
-	private String status;
+	private int status;
 	private Date date;
 	private Long totalPrice, priceShip, priceOff, totalPriceOrigin;
 	private String username;

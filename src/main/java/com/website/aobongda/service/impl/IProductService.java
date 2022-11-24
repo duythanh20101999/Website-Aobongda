@@ -11,7 +11,7 @@ import com.website.aobongda.payload.response.ProductReponse;
 public interface IProductService {
 	
 	DataResponse<ProductReq> create (ProductReq request, MultipartFile image) throws IOException;
-	DataResponse<?> update (Long id, ProductReq request);
+	DataResponse<?> update (Long id, ProductReq request, MultipartFile image) throws IOException;
 	DataResponse<ProductReponse> getAllProducts();
 	DataResponse<ProductReponse> getProductById(Long id);
 	
