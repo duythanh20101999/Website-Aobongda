@@ -28,9 +28,9 @@ public class ClubController {
 	private final IClubService iClubService;
 
 	// Get all club
-	@GetMapping("/club")
+	@GetMapping("/clubs")
 	public ResponseEntity<?> findAll() {
-		return ResponseEntity.ok(new ResponseDTO(true, "Success", iClubService.findAll()));
+		return ResponseEntity.ok(iClubService.getAllClubs());
 	}
 
 	// Get club by ID

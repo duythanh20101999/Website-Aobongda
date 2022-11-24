@@ -1,7 +1,8 @@
 package com.website.aobongda.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.website.aobongda.dto.ProductDetailResp;
 import com.website.aobongda.dto.ProductReq;
-import com.website.aobongda.dto.ResponseDTO;
-import com.website.aobongda.model.Product;
 import com.website.aobongda.service.impl.IProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,9 +28,17 @@ public class ProductController {
 	@Autowired
 	private final IProductService iproductService;
 
-	@PostMapping("/admin/create_product")
-	private ResponseEntity<?> create(@RequestBody ProductReq productReq) {
-		return ResponseEntity.ok(iproductService.create(productReq));
+	@PostMapping(value = "/admin/create_product")
+	private ResponseEntity<?> create(@RequestParam String name, @RequestParam String description,
+			@RequestParam int status, @RequestParam Long price,
+			@RequestParam Long id_club, @RequestParam MultipartFile img) throws IOException {
+		ProductReq productReq = new ProductReq();
+		productReq.setName(name);
+		productReq.setDescription(description);
+		productReq.setPrice(price);
+		productReq.setStatus(status);
+		productReq.setId_club(id_club);
+		return ResponseEntity.ok(iproductService.create(productReq, img));
 	}
 	
 	@GetMapping("/products")

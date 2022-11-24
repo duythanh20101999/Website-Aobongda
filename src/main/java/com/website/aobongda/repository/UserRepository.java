@@ -38,4 +38,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	
 	@Query(value = "select * from user where roles = 'USER'", nativeQuery = true)
 	public List<User> getAllAccountUser();
+	
+	@Query(value = "select * from user where id = :id", nativeQuery = true)
+	public User getAccountUserById(@Param("id") Long id);
 }

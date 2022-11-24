@@ -1,5 +1,6 @@
 package com.website.aobongda.service.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +9,9 @@ import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.website.aobongda.dto.BrandDTO;
 import com.website.aobongda.dto.ClubDTO;
+import com.website.aobongda.dto.LeagueDTO;
 import com.website.aobongda.exception.AppException;
 import com.website.aobongda.model.Brand;
 import com.website.aobongda.model.Club;
@@ -98,6 +101,29 @@ public class ClubService implements IClubService {
 		response.setSuccess(true);
 		response.setMessage("Create Success");
 		response.setData(clubResponse);
+		return response;
+	}
+
+	@Override
+	public DataResponse<ClubResponse> getAllClubs() {
+		DataResponse<ClubResponse> response = new DataResponse<>();
+		List<Club> clubs = clubRepository.findAll();
+		if(clubs.size() <= 0) {
+			response.setSuccess(false);
+			response.setMessage("Clubs is empty");
+		}else {
+			List<ClubResponse> clbResponses = new ArrayList<>();
+			for(Club club: clubs) {
+				ClubResponse clubResponse = modelMapper.map(club, ClubResponse.class);
+				clubResponse.setBrand(modelMapper.map(club.getBrand(), BrandDTO.class));
+				clubResponse.setLeague(modelMapper.map(club.getLeague(), LeagueDTO.class));
+				clbResponses.add(clubResponse);
+			}
+			response.setSuccess(true);
+			response.setMessage("Ok");
+			response.setDatas(clbResponses);
+		}
+		
 		return response;
 	}
 
