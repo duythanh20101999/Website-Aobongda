@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.aspectj.weaver.patterns.IfPointcut.IfFalsePointcut;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -125,6 +126,33 @@ public class ClubService implements IClubService {
 		}
 		
 		return response;
+	}
+
+	@Override
+	public DataResponse<ClubResponse> getClubById(Long id) {
+		DataResponse<ClubResponse> response = new DataResponse<>();
+		Club club = clubRepository.getById(id);
+		if(club == null) {
+			response.setSuccess(false);
+			response.setMessage("Club not found");
+			return response;
+		}
+		BrandDTO brand = modelMapper.map(club.getBrand(), BrandDTO.class);
+		LeagueDTO league = modelMapper.map(club.getLeague(), LeagueDTO.class);
+		
+		ClubResponse clubResponse = modelMapper.map(club, ClubResponse.class);
+		clubResponse.setBrand(brand);
+		clubResponse.setLeague(league);
+		response.setSuccess(true);
+		response.setMessage("Ok");
+		response.setData(clubResponse);
+		return response;
+	}
+
+	@Override
+	public DataResponse<ClubDTO> edit(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

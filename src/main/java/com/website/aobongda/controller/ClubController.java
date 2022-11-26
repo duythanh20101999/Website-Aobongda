@@ -1,5 +1,7 @@
 package com.website.aobongda.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,14 +36,14 @@ public class ClubController {
 	}
 
 	// Get club by ID
-	@GetMapping("/club/{clubId}")
-	public ResponseEntity<?> findById(@PathVariable Long clubId) {
-		Club club = iClubService.findByID(clubId);
-		if (club != null)
-			return ResponseEntity.ok(new ResponseDTO(true, "Success", club));
-		else
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDTO(false, "Club ID not exits", null));
-	}
+//	@GetMapping("/club/{clubId}")
+//	public ResponseEntity<?> findById(@PathVariable Long clubId) {
+//		Club club = iClubService.findByID(clubId);
+//		if (club != null)
+//			return ResponseEntity.ok(new ResponseDTO(true, "Success", club));
+//		else
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDTO(false, "Club ID not exits", null));
+//	}
 
 	// Add Club
 	// requied name Club
@@ -58,6 +60,11 @@ public class ClubController {
 	@PostMapping("/admin/create_club")
 	public ResponseEntity<?> createClub(@RequestBody ClubDTO request){
 		return ResponseEntity.ok(iClubService.createClub(request));
+	}
+	
+	@GetMapping("/club/{id}")
+	public ResponseEntity<?> getClubById(@PathVariable("id") Long id){
+		return ResponseEntity.ok(iClubService.getClubById(id));
 	}
 
 	// Update club
