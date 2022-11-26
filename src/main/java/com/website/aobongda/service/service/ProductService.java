@@ -1,5 +1,6 @@
 package com.website.aobongda.service.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -7,9 +8,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.ServletContext;
 
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,8 @@ import com.website.aobongda.payload.response.ProductReponse;
 import com.website.aobongda.repository.ClubRepository;
 import com.website.aobongda.repository.ProductRepository;
 import com.website.aobongda.service.impl.IProductService;
+
+import net.bytebuddy.utility.RandomString;
 
 @Service
 public class ProductService implements IProductService {
@@ -47,15 +52,16 @@ public class ProductService implements IProductService {
         if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
             Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
         }
+        String code = RandomString.make(10);
         Path file = CURRENT_FOLDER.resolve(staticPath)
-                .resolve(imagePath).resolve(image.getOriginalFilename());
+                .resolve(imagePath).resolve(code + image.getOriginalFilename());
         try (OutputStream os = Files.newOutputStream(file)) {
             os.write(image.getBytes());
         }
 		Club club = clubRepository.getById(request.getId_club());
 		Product product = modelMapper.map(request, Product.class);
 		product.setClub(club);
-		product.setImage(image.getOriginalFilename());
+		product.setImage(code + image.getOriginalFilename());
 		repository.save(product);
 		response.setSuccess(true);
 		response.setMessage("Create successful product");
@@ -78,18 +84,27 @@ public class ProductService implements IProductService {
 		product.setId(id);
 		product.setImage(imageOld);
 		product.setClub(clubRepository.getById(request.getId_club()));
-		if(image.getOriginalFilename() != "") {
+		if(image != null) {
 			Path staticPath = Paths.get("static");
 	        Path imagePath = Paths.get("images");
 	        if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
 	            Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
 	        }
+	        
+	        String code = RandomString.make(10);
 	        Path file = CURRENT_FOLDER.resolve(staticPath)
-	                .resolve(imagePath).resolve(image.getOriginalFilename());
+	                .resolve(imagePath).resolve(code + image.getOriginalFilename());
+	        
+	        Path fileOldPath = CURRENT_FOLDER.resolve(staticPath)
+	                .resolve(imagePath).resolve(imageOld);
+	        if(fileOldPath!=null) {
+	        	Files.delete(fileOldPath);
+	        }
+	        
 	        try (OutputStream os = Files.newOutputStream(file)) {
 	            os.write(image.getBytes());
 	        }
-	        product.setImage(image.getOriginalFilename());
+	        product.setImage(code + image.getOriginalFilename());
 		}
 		repository.save(product);
 		response.setSuccess(true);

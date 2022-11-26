@@ -54,7 +54,10 @@ public class ProductController {
 	@PutMapping("/admin/update_product/{id}")
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestParam String name, @RequestParam String description,
 			@RequestParam int status, @RequestParam Long price,
-			@RequestParam Long id_club, @RequestParam MultipartFile img) throws IOException {
+			@RequestParam Long id_club, @RequestParam(name = "img", required = false) MultipartFile img) throws IOException {
+//		if(img.isEmpty()) {
+//			String testString = "vao day";
+//		}
 		ProductReq productReq = new ProductReq();
 		productReq.setName(name);
 		productReq.setDescription(description);
