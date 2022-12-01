@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -161,20 +162,26 @@ public class ProductService implements IProductService {
 		return response;
 	}
 	
-//	@Override
-//	public DataResponse<ProductReponse> getProductByIdClub(Long id){
-//		DataResponse<ProductReponse> response = new DataResponse<>();
-//		Product product = repository.findByIdClub(id);
-//		if (product == null) {
-//			response.setSuccess(false);
-//			response.setMessage("Product not found");
-//			return response;
-//		}
-//		ProductReponse productReponse = modelMapper.map(product, ProductReponse.class);
-//		productReponse.setClub(modelMapper.map(product.getClub(), ClubDTO.class));
-//		response.setSuccess(true);
-//		response.setMessage("Ok");
-//		response.setData(productReponse);
-//		return response;
-//	}
+	@Override
+	public DataResponse<ProductReponse> getProductByIdClub(Long id){
+		DataResponse<ProductReponse> response = new DataResponse<>();
+		List<Product> products = repository.getProductByIdClub(id);
+		if (products.size() == 0) {
+			response.setSuccess(false);
+			response.setMessage("Product not found");
+			return response;
+		}
+		
+		List<ProductReponse> lisProduct = new ArrayList<>();
+		for(Product product : products) {
+			ProductReponse productReponse = modelMapper.map(product, ProductReponse.class);
+			productReponse.setClub(modelMapper.map(product.getClub(), ClubDTO.class));
+			lisProduct.add(productReponse);
+		}
+		
+		response.setSuccess(true);
+		response.setMessage("Ok");
+		response.setDatas(lisProduct);
+		return response;
+	}
 }

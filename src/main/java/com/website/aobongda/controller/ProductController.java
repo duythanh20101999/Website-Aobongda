@@ -56,18 +56,11 @@ public class ProductController {
 	public ResponseEntity<?> getProductByName(@RequestParam String name){
 		return ResponseEntity.ok(iproductService.getProductByName(name));
 	}
-//	@GetMapping("/product/")
-//	public ResponseEntity<?> getProductByIdClub(@RequestParam Long id){
-//		return ResponseEntity.ok(iproductService.getProductByIdClub(id));
-//	}
 	
 	@PutMapping("/admin/update_product/{id}")
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestParam String name, @RequestParam String description,
 			@RequestParam int status, @RequestParam Long price,
 			@RequestParam Long id_club, @RequestParam(name = "img", required = false) MultipartFile img) throws IOException {
-//		if(img.isEmpty()) {
-//			String testString = "vao day";
-//		}
 		ProductReq productReq = new ProductReq();
 		productReq.setName(name);
 		productReq.setDescription(description);
@@ -75,5 +68,10 @@ public class ProductController {
 		productReq.setStatus(status);
 		productReq.setId_club(id_club);
 		return ResponseEntity.ok(iproductService.update(id, productReq, img));
+	}
+	
+	@GetMapping("/product")
+	public ResponseEntity<?> getProductByIdClub(@RequestParam("id_club") Long id_club){
+		return ResponseEntity.ok(iproductService.getProductByIdClub(id_club));
 	}
 }

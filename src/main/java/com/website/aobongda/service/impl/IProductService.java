@@ -15,5 +15,5 @@ public interface IProductService {
 	DataResponse<ProductReponse> getAllProducts();
 	DataResponse<ProductReponse> getProductById(Long id);
 	DataResponse<ProductReponse> getProductByName(String name);
-//	DataResponse<ProductReponse> getProductByIdClub(Long id);
+	DataResponse<ProductReponse> getProductByIdClub(Long id);
 }
