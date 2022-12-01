@@ -80,7 +80,7 @@ public class OrderService implements IOrderService {
 			order.setPriceOff(Long.valueOf(0));
 		}
 
-		order.setPriceShip(Long.valueOf(100000));
+		order.setPriceShip(Long.valueOf(10000));
 		order.setStatus(orderReq.getStatus());
 		List<Cart> cartList = cartRepository.findByCartID_UserId(id);
 
@@ -96,12 +96,9 @@ public class OrderService implements IOrderService {
 		order.setTotalPrice(totalPrice);
 		orderRepository.save(order);
 		response.setSuccess(true);
-		response.setMessage("Create successful product");
+		response.setMessage("Create successful order");
 		response.setData(orderReq);
 		return response;
-
-		// orderRepository.save(order);
-		// return order;
 	}
 
 	

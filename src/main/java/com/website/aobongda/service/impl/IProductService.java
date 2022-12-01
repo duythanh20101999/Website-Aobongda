@@ -14,5 +14,6 @@ public interface IProductService {
 	DataResponse<?> update (Long id, ProductReq request, MultipartFile image) throws IOException;
 	DataResponse<ProductReponse> getAllProducts();
 	DataResponse<ProductReponse> getProductById(Long id);
-	
+	DataResponse<ProductReponse> getProductByName(String name);
+//	DataResponse<ProductReponse> getProductByIdClub(Long id);
 }

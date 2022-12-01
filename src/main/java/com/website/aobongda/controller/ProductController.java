@@ -2,6 +2,7 @@ package com.website.aobongda.controller;
 
 import java.io.IOException;
 
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -50,6 +51,15 @@ public class ProductController {
 	public ResponseEntity<?> getProductById(@PathVariable("id") Long id){
 		return ResponseEntity.ok(iproductService.getProductById(id));
 	}
+	
+	@GetMapping("/product/")
+	public ResponseEntity<?> getProductByName(@RequestParam String name){
+		return ResponseEntity.ok(iproductService.getProductByName(name));
+	}
+//	@GetMapping("/product/")
+//	public ResponseEntity<?> getProductByIdClub(@RequestParam Long id){
+//		return ResponseEntity.ok(iproductService.getProductByIdClub(id));
+//	}
 	
 	@PutMapping("/admin/update_product/{id}")
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestParam String name, @RequestParam String description,

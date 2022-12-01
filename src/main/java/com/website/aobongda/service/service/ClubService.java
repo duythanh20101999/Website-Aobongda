@@ -20,9 +20,11 @@ import com.website.aobongda.model.League;
 import com.website.aobongda.model.Product;
 import com.website.aobongda.payload.response.ClubResponse;
 import com.website.aobongda.payload.response.DataResponse;
+import com.website.aobongda.payload.response.ClubResponse;
 import com.website.aobongda.repository.BrandRepository;
 import com.website.aobongda.repository.ClubRepository;
 import com.website.aobongda.repository.LeagueRepository;
+import com.website.aobongda.repository.ProductRepository;
 import com.website.aobongda.service.impl.IClubService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class ClubService implements IClubService {
 	private final ClubRepository clubRepository;
 	private final BrandRepository brandRepository;
 	private final LeagueRepository leagueRepository;
+	private final ProductRepository repository;
 	private final ModelMapper modelMapper;
 
 	@Override
@@ -153,6 +156,23 @@ public class ClubService implements IClubService {
 	public DataResponse<ClubDTO> edit(Long id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public DataResponse<ClubResponse> getClubByName(String name) {
+		DataResponse<ClubResponse> response = new DataResponse<>();
+		Club club = clubRepository.findByName(name);
+		if (club == null) {
+			response.setSuccess(false);
+			response.setMessage("Club not found");
+			return response;
+		}
+		ClubResponse clubResponse = modelMapper.map(club, ClubResponse.class);
+		clubResponse.setBrand(modelMapper.map(club.getBrand(), BrandDTO.class));
+		clubResponse.setLeague(modelMapper.map(club.getLeague(), LeagueDTO.class));
+		response.setSuccess(true);
+		response.setMessage("Ok");
+		response.setData(clubResponse);
+		return response;
 	}
 
 }

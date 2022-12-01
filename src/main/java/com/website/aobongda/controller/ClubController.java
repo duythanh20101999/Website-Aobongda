@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.website.aobongda.dto.ClubDTO;
@@ -85,5 +86,9 @@ public class ClubController {
 			return ResponseEntity.ok(new ResponseDTO(true, "Success", null));
 		} else
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDTO(false, "Club ID not exits", null));
+	}
+	@GetMapping("/club/")
+	public ResponseEntity<?> getClubByName(@RequestParam String name){
+		return ResponseEntity.ok(iClubService.getClubByName(name));
 	}
 }

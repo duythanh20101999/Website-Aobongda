@@ -144,5 +144,37 @@ public class ProductService implements IProductService {
 		response.setData(productReponse);
 		return response;
 	}
-
+	@Override
+	public DataResponse<ProductReponse> getProductByName(String name) {
+		DataResponse<ProductReponse> response = new DataResponse<>();
+		Product product = repository.findByName(name);
+		if (product == null) {
+			response.setSuccess(false);
+			response.setMessage("Product not found");
+			return response;
+		}
+		ProductReponse productReponse = modelMapper.map(product, ProductReponse.class);
+		productReponse.setClub(modelMapper.map(product.getClub(), ClubDTO.class));
+		response.setSuccess(true);
+		response.setMessage("Ok");
+		response.setData(productReponse);
+		return response;
+	}
+	
+//	@Override
+//	public DataResponse<ProductReponse> getProductByIdClub(Long id){
+//		DataResponse<ProductReponse> response = new DataResponse<>();
+//		Product product = repository.findByIdClub(id);
+//		if (product == null) {
+//			response.setSuccess(false);
+//			response.setMessage("Product not found");
+//			return response;
+//		}
+//		ProductReponse productReponse = modelMapper.map(product, ProductReponse.class);
+//		productReponse.setClub(modelMapper.map(product.getClub(), ClubDTO.class));
+//		response.setSuccess(true);
+//		response.setMessage("Ok");
+//		response.setData(productReponse);
+//		return response;
+//	}
 }
