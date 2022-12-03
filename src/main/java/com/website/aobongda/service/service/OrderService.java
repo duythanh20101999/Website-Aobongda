@@ -1,13 +1,11 @@
 package com.website.aobongda.service.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -15,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.website.aobongda.dto.OrderReq;
 import com.website.aobongda.dto.ProductReq;
+import com.website.aobongda.dto.TotalPriceByStatus;
 import com.website.aobongda.model.Cart;
 import com.website.aobongda.model.Order;
 import com.website.aobongda.model.OrderDetail;
@@ -180,6 +179,78 @@ public class OrderService implements IOrderService {
 		}else {
 			response.setSuccess(false);
 			response.setMessage("Order not found");
+		}
+		return response;
+	}
+	
+	@Override
+	public DataResponse<?> changeStatus(Long id) {
+		DataResponse<?> response = new DataResponse<>();
+		Order order = orderRepository.getById(id);
+		if(order != null) {
+			if(order.getStatus() == 2) {
+				response.setSuccess(false);
+				response.setMessage("Order can't change status");
+			}else {
+				if(order.getStatus() == 0) {
+					order.setStatus(1);
+				}else if(order.getStatus() == 1){
+					order.setStatus(2);
+				}
+				orderRepository.save(order);
+				response.setSuccess(true);
+				response.setMessage("Success");
+			}
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Order not found");
+		}
+		return response;
+	}
+
+	@Override
+	public DataResponse<TotalPriceByStatus> totalByStatus() {
+		DataResponse<TotalPriceByStatus> response = new DataResponse<>();
+		List<TotalPriceByStatus> total = orderRepository.totalByStatus();
+		response.setSuccess(true);
+		response.setMessage("Ok");
+		response.setDatas(total);
+		return response;
+	}
+	
+	@Override
+	public DataResponse<OrderResponse> getOrderByStatus(int status) {
+		DataResponse<OrderResponse> response = new DataResponse<>();
+		List<Order> orders = orderRepository.getOrdersByStatus(status);
+		if(orders.size()!=0) {
+			List<OrderResponse> listOrder = new ArrayList<>();
+			for(Order order : orders) {
+				OrderResponse orderResponse = new OrderResponse();
+				orderResponse.setAddress(order.getAddress());
+				orderResponse.setName(order.getName());
+				orderResponse.setPhone(order.getPhone());
+				orderResponse.setUsername(order.getUser().getUsername());
+				orderResponse.setDate(order.getDate());
+				orderResponse.setStatus(status);
+				orderResponse.setTotalPrice(order.getTotalPrice());
+				orderResponse.setId(order.getId());
+				
+				List<OrderDetail> orDetails = order.getOrderDetails();
+				List<ProductReq> listProduct = new ArrayList<>();
+				for(OrderDetail orderDetail: orDetails) {
+					ProductReq product = modelMapper.map(orderDetail.getProduct(), ProductReq.class);
+					listProduct.add(product);
+				}
+				orderResponse.setProducts(listProduct);
+				listOrder.add(orderResponse);
+			}
+			response.setSuccess(true);
+			response.setMessage("Success");
+			response.setDatas(listOrder);
+			
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Order is empty");
 		}
 		return response;
 	}
