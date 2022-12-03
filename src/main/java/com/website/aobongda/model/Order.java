@@ -1,6 +1,6 @@
 package com.website.aobongda.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -16,9 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
@@ -67,6 +66,7 @@ public class Order {
 	@Column
 	private String code;
 	
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	@Column(name = "date")
 	private Date date;
 

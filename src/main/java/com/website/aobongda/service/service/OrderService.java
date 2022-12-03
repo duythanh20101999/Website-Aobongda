@@ -1,10 +1,13 @@
 package com.website.aobongda.service.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import com.website.aobongda.model.Voucher;
 import com.website.aobongda.payload.response.DataResponse;
 import com.website.aobongda.payload.response.OrderResponse;
 import com.website.aobongda.repository.CartRepository;
+import com.website.aobongda.repository.OrderDetailRepository;
 import com.website.aobongda.repository.OrderRepository;
 import com.website.aobongda.repository.PaymentRepository;
 import com.website.aobongda.repository.ProductRepository;
@@ -50,54 +54,63 @@ public class OrderService implements IOrderService {
 	@Autowired
 	OrderRepository orderRepository;
 	@Autowired
+	OrderDetailRepository orderDetailRepository;
+	@Autowired
 	ModelMapper modelMapper;
 
 	@Override
-	public DataResponse<OrderReq> create(OrderReq orderReq) {
-		DataResponse<OrderReq> response = new DataResponse<>();
+	public DataResponse<?> create(OrderReq orderReq) {
+		DataResponse<?> response = new DataResponse<>();
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
 		Long id = user.getId();
 		User users = userRepository.getReferenceById(id);
 		Order order = new Order();
-		// order.setId(orderReq.getId());
 		order.setName(users.getName());
 		order.setPhone(users.getPhone());
 		order.setAddress(orderReq.getAddress());
 		order.setNote(orderReq.getNote());
-		order.setCode(orderReq.getCode());
+		order.setDate(new Date());
 
 		Voucher voucher = voucherRepository.findByCode(orderReq.getCode());
-
-		order.setUser(users);
-		order.setVoucher(voucher);
-		Payment payment = paymentRepository.getReferenceById(orderReq.getId_payment());
-		order.setPayment(payment);
-
-		if (orderReq.getCode().equals(voucher.getCode())) {
+		if(voucher != null) {
+			order.setCode(orderReq.getCode());
+			order.setVoucher(voucher);
 			order.setPriceOff(voucher.getPrice());
-		} else {
+		}else {
 			order.setPriceOff(Long.valueOf(0));
 		}
 
-		order.setPriceShip(Long.valueOf(10000));
-		order.setStatus(orderReq.getStatus());
-		List<Cart> cartList = cartRepository.findByCartID_UserId(id);
+		order.setUser(users);
+		Payment payment = paymentRepository.getReferenceById(orderReq.getId_payment());
+		order.setPayment(payment);
 
-		if (cartList != null) {
+		order.setPriceShip(Long.valueOf(10000));
+		order.setStatus(0);
+		List<Cart> cartList = cartRepository.findByCartID_UserId(id);
+		List<OrderDetail> orderDetails = new ArrayList<>();
+		if (cartList.size() > 0) {
 			cartList.forEach(cart -> {
 
 				Product product = productRepository.getReferenceById(cart.getCartID().getProductId());
 				price += (cart.getQuantity() * product.getPrice());
+				OrderDetail orderDetail = new OrderDetail();
+				orderDetail.setProduct(product);
+				orderDetail.setQuantity(Long.valueOf(cart.getQuantity()));
+				orderDetails.add(orderDetail);
+				cartRepository.delete(cart);
 			});
 		}
 		order.setTotalPriceOrigin(price);
 		Long totalPrice = price + order.getPriceShip() - order.getPriceOff();
 		order.setTotalPrice(totalPrice);
 		orderRepository.save(order);
+		orderDetails.forEach(orderDetail ->{
+			orderDetail.setOrder(order);
+			orderDetailRepository.save(orderDetail);
+		});
 		response.setSuccess(true);
 		response.setMessage("Create successful order");
-		response.setData(orderReq);
 		return response;
 	}
 

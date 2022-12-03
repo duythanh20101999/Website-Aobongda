@@ -5,7 +5,7 @@ import com.website.aobongda.payload.response.DataResponse;
 import com.website.aobongda.payload.response.OrderResponse;
 
 public interface IOrderService {
-	DataResponse<OrderReq> create(OrderReq orderReq);
+	DataResponse<?> create(OrderReq orderReq);
 	DataResponse<OrderResponse> getAllOrders();
 	DataResponse<OrderResponse> getOrderById(Long id);
 }
