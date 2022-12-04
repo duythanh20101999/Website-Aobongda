@@ -184,4 +184,15 @@ public class ProductService implements IProductService {
 		response.setDatas(lisProduct);
 		return response;
 	}
+	
+	@Override
+	public List<ProductReq> search(String keyword){
+		List<Product> listProducts = repository.findByNameOrClubOrBrand(keyword);
+		List<ProductReq> list = new ArrayList<>();
+		listProducts.forEach(product ->{
+			ProductReq productReq = modelMapper.map(product, ProductReq.class);
+			list.add(productReq);
+		});
+		return list;
+	}
 }
