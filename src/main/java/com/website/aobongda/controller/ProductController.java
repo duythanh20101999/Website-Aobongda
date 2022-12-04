@@ -32,13 +32,11 @@ public class ProductController {
 
 	@PostMapping(value = "/admin/create_product")
 	private ResponseEntity<?> create(@RequestParam String name, @RequestParam String description,
-			@RequestParam int status, @RequestParam Long price,
-			@RequestParam Long id_club, @RequestParam MultipartFile img) throws IOException {
+			@RequestParam Long price, @RequestParam Long id_club, @RequestParam MultipartFile img) throws IOException {
 		ProductReq productReq = new ProductReq();
 		productReq.setName(name);
 		productReq.setDescription(description);
 		productReq.setPrice(price);
-		productReq.setStatus(status);
 		productReq.setId_club(id_club);
 		return ResponseEntity.ok(iproductService.create(productReq, img));
 	}

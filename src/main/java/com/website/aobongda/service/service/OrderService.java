@@ -166,6 +166,7 @@ public class OrderService implements IOrderService {
 				List<ProductReq> listProduct = new ArrayList<>();
 				for(OrderDetail orderDetail: orDetails) {
 					ProductReq product = modelMapper.map(orderDetail.getProduct(), ProductReq.class);
+					product.setQuantity(orderDetail.getQuantity());
 					listProduct.add(product);
 				}
 				orderResponse.setProducts(listProduct);

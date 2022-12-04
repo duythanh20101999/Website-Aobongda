@@ -73,17 +73,18 @@ public class AccountService implements IAccountService{
 		if(user!=null && user.getRoles().toString().equals("USER")) {
 			if(user.isStatus()) {
 				user.setStatus(false);
-				response.setSuccess(true);
+				repository.save(user);
 				response.setMessage("Blocked this user");
 			}else {
 				user.setStatus(true);
-				response.setSuccess(true);
-				response.setMessage("Opened this user");
+				repository.save(user);
+				response.setMessage("Open this user");
 			}
+			response.setSuccess(true);
 			
 		}else {
 			response.setSuccess(false);
-			response.setMessage("User not found or blocked");
+			response.setMessage("User not found");
 		}
 		
 		return response;

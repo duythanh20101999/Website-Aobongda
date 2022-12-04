@@ -61,6 +61,7 @@ public class ProductService implements IProductService {
         }
 		Club club = clubRepository.getById(request.getId_club());
 		Product product = modelMapper.map(request, Product.class);
+		product.setStatus(1);
 		product.setClub(club);
 		product.setImage(code + image.getOriginalFilename());
 		repository.save(product);
