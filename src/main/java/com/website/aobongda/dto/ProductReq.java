@@ -11,4 +11,5 @@ public class ProductReq {
 	private int status;
 	private Long id_club;
 	private String image;
+	private Long quantity;
 }

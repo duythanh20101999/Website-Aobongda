@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 public class CartResp {
-	private int quantiy;
+	private Long product_Id;
+	private int quantity;
 	private Items item;
 
 	@NoArgsConstructor

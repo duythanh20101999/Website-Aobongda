@@ -71,6 +71,7 @@ public class CartService implements ICartService {
 		Cart updatedCart = cartRepo.findById(cartID).orElse(null);
 		if (updatedCart != null) {
 			updatedCart.setQuantity(quantity);
+			cartRepo.save(updatedCart);
 		}
 		return updatedCart;
 	}
@@ -83,7 +84,8 @@ public class CartService implements ICartService {
 			cartList.forEach(cart -> {
 				CartResp cartResp = new CartResp();
 				Product product = productRepo.getReferenceById(cart.getCartID().getProductId());
-				cartResp.setQuantiy(cart.getQuantity());
+				cartResp.setProduct_Id(product.getId());
+				cartResp.setQuantity(cart.getQuantity());
 				cartResp.setItem(new CartResp.Items(product.getName(), product.getPrice(), product.getImage()));
 				cartResps.add(cartResp);
 			});

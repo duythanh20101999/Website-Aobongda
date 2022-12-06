@@ -61,6 +61,7 @@ public class ProductService implements IProductService {
         }
 		Club club = clubRepository.getById(request.getId_club());
 		Product product = modelMapper.map(request, Product.class);
+		product.setStatus(1);
 		product.setClub(club);
 		product.setImage(code + image.getOriginalFilename());
 		repository.save(product);
@@ -183,5 +184,16 @@ public class ProductService implements IProductService {
 		response.setMessage("Ok");
 		response.setDatas(lisProduct);
 		return response;
+	}
+	
+	@Override
+	public List<ProductReq> search(String keyword){
+		List<Product> listProducts = repository.findByNameOrClubOrBrand(keyword);
+		List<ProductReq> list = new ArrayList<>();
+		listProducts.forEach(product ->{
+			ProductReq productReq = modelMapper.map(product, ProductReq.class);
+			list.add(productReq);
+		});
+		return list;
 	}
 }

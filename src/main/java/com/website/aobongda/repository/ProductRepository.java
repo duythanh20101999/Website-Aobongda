@@ -16,4 +16,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	
 	@Query(value = "Select * from product where id_club = :id_club", nativeQuery = true)
 	public List<Product> getProductByIdClub(@Param("id_club") Long id);
+	
+	@Query(value = "select p.id, p.description, p.image, p.name, p.price, p.status, p.id_club "
+			+ "from (product as p join club as c "
+			+ "on p.id_club = c.id) join brand as b on b.id = c.brand_id "
+			+ "where p.name like %:keyword% or c.name like %:keyword% or b.name like %:keyword%", nativeQuery = true)
+	public List<Product> findByNameOrClubOrBrand(@Param("keyword") String keyword);
 }

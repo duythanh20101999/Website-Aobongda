@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.website.aobongda.dto.ProductReq;
 import com.website.aobongda.service.impl.IProductService;
+import com.website.aobongda.service.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,13 +32,11 @@ public class ProductController {
 
 	@PostMapping(value = "/admin/create_product")
 	private ResponseEntity<?> create(@RequestParam String name, @RequestParam String description,
-			@RequestParam int status, @RequestParam Long price,
-			@RequestParam Long id_club, @RequestParam MultipartFile img) throws IOException {
+			@RequestParam Long price, @RequestParam Long id_club, @RequestParam MultipartFile img) throws IOException {
 		ProductReq productReq = new ProductReq();
 		productReq.setName(name);
 		productReq.setDescription(description);
 		productReq.setPrice(price);
-		productReq.setStatus(status);
 		productReq.setId_club(id_club);
 		return ResponseEntity.ok(iproductService.create(productReq, img));
 	}
@@ -73,5 +72,10 @@ public class ProductController {
 	@GetMapping("/product")
 	public ResponseEntity<?> getProductByIdClub(@RequestParam("id_club") Long id_club){
 		return ResponseEntity.ok(iproductService.getProductByIdClub(id_club));
+	}
+	
+	@GetMapping("/product/search")
+	public ResponseEntity<?> search(@RequestParam String keyword){
+		return ResponseEntity.ok(iproductService.search(keyword));
 	}
 }

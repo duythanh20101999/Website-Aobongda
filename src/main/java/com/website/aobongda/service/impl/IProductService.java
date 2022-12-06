@@ -1,6 +1,7 @@
 package com.website.aobongda.service.impl;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,4 +17,5 @@ public interface IProductService {
 	DataResponse<ProductReponse> getProductById(Long id);
 	DataResponse<ProductReponse> getProductByName(String name);
 	DataResponse<ProductReponse> getProductByIdClub(Long id);
+	List<ProductReq> search(String keyword);
 }
