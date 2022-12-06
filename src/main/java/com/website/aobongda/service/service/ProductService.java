@@ -82,8 +82,10 @@ public class ProductService implements IProductService {
 			return response;
 		}
 		String imageOld = product.getImage();
+		int status = product.getStatus();
 		product = modelMapper.map(request, Product.class);
 		product.setId(id);
+		product.setStatus(status);
 		product.setImage(imageOld);
 		product.setClub(clubRepository.getById(request.getId_club()));
 		if(image != null) {
@@ -187,13 +189,36 @@ public class ProductService implements IProductService {
 	}
 	
 	@Override
-	public List<ProductReq> search(String keyword){
+	public DataResponse<ProductReq> search(String keyword){
+		DataResponse<ProductReq> response = new DataResponse<>();
 		List<Product> listProducts = repository.findByNameOrClubOrBrand(keyword);
-		List<ProductReq> list = new ArrayList<>();
-		listProducts.forEach(product ->{
-			ProductReq productReq = modelMapper.map(product, ProductReq.class);
-			list.add(productReq);
-		});
-		return list;
+		if(listProducts.size() > 0) {
+			List<ProductReq> list = new ArrayList<>();
+			listProducts.forEach(product ->{
+				ProductReq productReq = modelMapper.map(product, ProductReq.class);
+				list.add(productReq);
+			});
+			response.setSuccess(true);
+			response.setMessage("Ok");
+			response.setDatas(list);
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Not found product");
+		}
+		
+		return response;
+	}
+	
+	@Override
+	public DataResponse<?> updateStatusProduct(Long id){
+		DataResponse<?> response = new DataResponse<>();
+		Product product = repository.getById(id);
+		if(product.getStatus() == 1) product.setStatus(0);
+		else product.setStatus(1);
+		repository.save(product);
+		response.setSuccess(true);
+		response.setMessage("Status update successful");
+		return response;
+		
 	}
 }

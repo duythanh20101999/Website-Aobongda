@@ -57,14 +57,12 @@ public class ProductController {
 	}
 	
 	@PutMapping("/admin/update_product/{id}")
-	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestParam String name, @RequestParam String description,
-			@RequestParam int status, @RequestParam Long price,
+	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestParam String name, @RequestParam String description, @RequestParam Long price,
 			@RequestParam Long id_club, @RequestParam(name = "img", required = false) MultipartFile img) throws IOException {
 		ProductReq productReq = new ProductReq();
 		productReq.setName(name);
 		productReq.setDescription(description);
 		productReq.setPrice(price);
-		productReq.setStatus(status);
 		productReq.setId_club(id_club);
 		return ResponseEntity.ok(iproductService.update(id, productReq, img));
 	}
@@ -77,5 +75,10 @@ public class ProductController {
 	@GetMapping("/product/search")
 	public ResponseEntity<?> search(@RequestParam String keyword){
 		return ResponseEntity.ok(iproductService.search(keyword));
+	}
+	
+	@GetMapping("/admin/product/change_status/{id}")
+	public ResponseEntity<?> updateStatus(@PathVariable("id") Long id){
+		return ResponseEntity.ok(iproductService.updateStatusProduct(id));
 	}
 }
