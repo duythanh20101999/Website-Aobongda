@@ -35,6 +35,11 @@ public class OrderController {
 	public ResponseEntity<?> getAllOrder() {
 		return ResponseEntity.ok(iorderService.getAllOrders());
 	}
+	@GetMapping("/ordersuser")
+	public ResponseEntity<?> getAllOrdersByUser() {
+		return ResponseEntity.ok(iorderService.getAllOrdersByUser());
+	}
+	
 	
 	@GetMapping({"/user/order/{id}", "/admin/order/{id}"})
 	public ResponseEntity<?> getOrderById(@PathVariable("id") Long id) {

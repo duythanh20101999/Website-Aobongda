@@ -146,6 +146,41 @@ public class OrderService implements IOrderService {
 		}
 		return response;
 	}
+	@Override
+	public DataResponse<OrderResponse> getAllOrdersByUser(){
+		DataResponse<OrderResponse> response = new DataResponse<>();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
+		Long id = user.getId();
+		List<Order> orders = orderRepository.findByIdUser(id);
+		if(orders != null) {
+			List<OrderResponse> listOrder = new ArrayList<>();
+			for(Order order : orders) {
+				OrderResponse orderResponse = new OrderResponse();
+				orderResponse = modelMapper.map(order, OrderResponse.class);
+				orderResponse.setUsername(order.getUser().getUsername());
+				orderResponse.setStatus(order.getStatus());
+				
+				List<OrderDetail> orDetails = order.getOrderDetails();
+				List<ProductReq> listProduct = new ArrayList<>();
+				for(OrderDetail orderDetail: orDetails) {
+					ProductReq product = modelMapper.map(orderDetail.getProduct(), ProductReq.class);
+					listProduct.add(product);
+				}
+				
+				orderResponse.setProducts(listProduct);
+				listOrder.add(orderResponse);
+			}
+			response.setSuccess(true);
+			response.setMessage("Success");
+			response.setDatas(listOrder);
+			
+		}else {
+			response.setSuccess(false);
+			response.setMessage("Order is empty");
+		}
+		return response;
+	}
 
 	@Override
 	public DataResponse<OrderResponse> getOrderById(Long id) {
