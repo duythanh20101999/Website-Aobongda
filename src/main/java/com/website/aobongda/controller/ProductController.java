@@ -81,4 +81,9 @@ public class ProductController {
 	public ResponseEntity<?> updateStatus(@PathVariable("id") Long id){
 		return ResponseEntity.ok(iproductService.updateStatusProduct(id));
 	}
+	
+	@GetMapping("/product_league")
+	public ResponseEntity<?> getProductsByLeagueId(@RequestParam("id_league") Long id_league){
+		return ResponseEntity.ok(iproductService.getProductsByLeagueId(id_league));
+	}
 }

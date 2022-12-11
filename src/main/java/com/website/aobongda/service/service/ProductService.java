@@ -22,10 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.website.aobongda.dto.ClubDTO;
 import com.website.aobongda.dto.ProductReq;
 import com.website.aobongda.model.Club;
+import com.website.aobongda.model.League;
 import com.website.aobongda.model.Product;
 import com.website.aobongda.payload.response.DataResponse;
 import com.website.aobongda.payload.response.ProductReponse;
 import com.website.aobongda.repository.ClubRepository;
+import com.website.aobongda.repository.LeagueRepository;
 import com.website.aobongda.repository.ProductRepository;
 import com.website.aobongda.service.impl.IProductService;
 
@@ -42,6 +44,8 @@ public class ProductService implements IProductService {
 	ClubRepository clubRepository;
 	@Autowired
 	ServletContext application;
+	@Autowired
+	LeagueRepository leagueRepository;
 	
 	private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
 
@@ -189,14 +193,15 @@ public class ProductService implements IProductService {
 	}
 	
 	@Override
-	public DataResponse<ProductReq> search(String keyword){
-		DataResponse<ProductReq> response = new DataResponse<>();
+	public DataResponse<ProductReponse> search(String keyword){
+		DataResponse<ProductReponse> response = new DataResponse<>();
 		List<Product> listProducts = repository.findByNameOrClubOrBrand(keyword);
 		if(listProducts.size() > 0) {
-			List<ProductReq> list = new ArrayList<>();
+			List<ProductReponse> list = new ArrayList<>();
 			listProducts.forEach(product ->{
-				ProductReq productReq = modelMapper.map(product, ProductReq.class);
-				list.add(productReq);
+				ProductReponse productReponse = modelMapper.map(product, ProductReponse.class);
+				productReponse.setClub(modelMapper.map(product.getClub(), ClubDTO.class));
+				list.add(productReponse);
 			});
 			response.setSuccess(true);
 			response.setMessage("Ok");
@@ -220,5 +225,25 @@ public class ProductService implements IProductService {
 		response.setMessage("Status update successful");
 		return response;
 		
+	}
+	
+	@Override
+	public DataResponse<ProductReponse> getProductsByLeagueId(Long id) {
+		DataResponse<ProductReponse> response = new DataResponse<>();
+		League league = leagueRepository.getById(id);
+		if(league != null) {
+			List<Club> listClubs = clubRepository.findByLeague(league);
+			List<ProductReponse> list = new ArrayList<>();
+			listClubs.forEach(club -> {
+				List<Product> listProducts = repository.getProductByIdClub(club.getId());
+				listProducts.forEach(product ->{
+					ProductReponse productReponse = modelMapper.map(product, ProductReponse.class);
+					productReponse.setClub(modelMapper.map(product.getClub(), ClubDTO.class));
+					list.add(productReponse);
+				});
+			});
+			response.setDatas(list);
+		}
+		return response;
 	}
 }
