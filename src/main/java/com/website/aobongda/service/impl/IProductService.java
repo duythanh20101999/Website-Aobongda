@@ -17,6 +17,7 @@ public interface IProductService {
 	DataResponse<ProductReponse> getProductById(Long id);
 	DataResponse<ProductReponse> getProductByName(String name);
 	DataResponse<ProductReponse> getProductByIdClub(Long id);
-	DataResponse<ProductReq> search(String keyword);
+	DataResponse<ProductReponse> search(String keyword);
 	DataResponse<?> updateStatusProduct(Long id);
+	DataResponse<ProductReponse> getProductsByLeagueId(Long id);
 }
