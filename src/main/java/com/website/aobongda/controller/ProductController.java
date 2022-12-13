@@ -86,4 +86,9 @@ public class ProductController {
 	public ResponseEntity<?> getProductsByLeagueId(@RequestParam("id_league") Long id_league){
 		return ResponseEntity.ok(iproductService.getProductsByLeagueId(id_league));
 	}
+	
+	@GetMapping("/product_top")
+	public ResponseEntity<?> getProductByTop(){
+		return ResponseEntity.ok(iproductService.getProductByTop());
+	}
 }

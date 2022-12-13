@@ -20,4 +20,5 @@ public interface IProductService {
 	DataResponse<ProductReponse> search(String keyword);
 	DataResponse<?> updateStatusProduct(Long id);
 	DataResponse<ProductReponse> getProductsByLeagueId(Long id);
+	DataResponse<ProductReponse> getProductByTop();
 }

@@ -246,4 +246,20 @@ public class ProductService implements IProductService {
 		}
 		return response;
 	}
+	
+	@Override
+	public DataResponse<ProductReponse> getProductByTop(){
+		DataResponse<ProductReponse> response = new DataResponse<>();
+		List<Product> products = repository.getProductByTop();
+		List<ProductReponse> listProduct = new ArrayList<>();
+		for (Product product : products) {
+			ProductReponse productReponse = modelMapper.map(product, ProductReponse.class);
+			productReponse.setClub(modelMapper.map(product.getClub(), ClubDTO.class));
+			listProduct.add(productReponse);
+		}
+		response.setSuccess(true);
+		response.setMessage("Ok");
+		response.setDatas(listProduct);
+		return response;
+	}
 }
